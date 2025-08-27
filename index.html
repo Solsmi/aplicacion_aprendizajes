@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Calculadora de Metas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Mi Calculadora de Metas</h1>
+            <ul>
+                <li><a href="#pomodoros">Pomodoros</a></li>
+                <li><a href="#habitos">Hábitos</a></li>
+                <li><a href="#metas">Metas SMART</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="pomodoros">
+            <h2>Calculadora de Pomodoros</h2>
+            <form id="pomodoro-form">
+                <label for="horas-estudio">Horas de estudio planificadas:</label>
+                <input type="number" id="horas-estudio" min="0" step="0.5" required>
+                <button type="submit">Calcular Pomodoros</button>
+            </form>
+            <div id="resultado-pomodoros"></div>
+        </section>
+
+        <section id="habitos">
+            <h2>Evaluador de Hábitos</h2>
+            <form id="habitos-form">
+                <fieldset>
+                    <legend>Selecciona tus hábitos de estudio:</legend>
+                    <div>
+                        <input type="checkbox" id="habit1" name="habito" value="planificar">
+                        <label for="habit1">Planificar el estudio diario</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="habit2" name="habito" value="lugar-fijo">
+                        <label for="habit2">Estudiar en un lugar fijo</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="habit3" name="habito" value="descansos">
+                        <label for="habit3">Tomar descansos regulares</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="habit4" name="habito" value="evitar-distracciones">
+                        <label for="habit4">Evitar distracciones</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="habit5" name="habito" value="repasar">
+                        <label for="habit5">Repasar lo aprendido</label>
+                    </div>
+                </fieldset>
+                <button type="button" id="evaluar-habitos">Evaluar Hábitos</button>
+            </form>
+            <div id="resultado-habitos"></div>
+        </section>
+
+        <section id="metas">
+            <h2>Generador de Metas SMART</h2>
+            <form id="metas-form">
+                <label for="descripcion-meta">Descripción de la meta:</label>
+                <textarea id="descripcion-meta" required></textarea>
+                <button type="button" id="generar-meta">Generar Meta SMART</button>
+            </form>
+            <div id="resultado-metas"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Desarrollado por: [Tu Nombre]</p>
+        <p>Contacto: <a href="mailto:tuemail@example.com">tuemail@example.com</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
