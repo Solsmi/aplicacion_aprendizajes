@@ -257,7 +257,10 @@ function generarGraficoPomodoros(datos) {
   for (let i = 0; i < elementosMostrar; i++) {
     const actividad = datos.planTrabajo[i];
     const actividadElement = document.createElement('div');
-    actividadElement.textContent = actividad.nombre;
+    actividadElement.innerHTML = `
+      <div>${actividad.nombre}</div>
+      <div class="minutos">${actividad.duracion} min</div>
+    `;
     actividadElement.style.backgroundColor = actividad.color;
     planContainer.appendChild(actividadElement);
   }

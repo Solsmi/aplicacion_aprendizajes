@@ -235,7 +235,8 @@ button:active {
   height: 40px;
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -289,4 +290,9 @@ footer a:hover {
   button {
     width: 100%;
   }
+}
+/* Estilos para centrar los minutos en el plan de trabajo */
+#grafico-pomodoros > div:last-child > div > .minutos {
+  text-align: center;
+  font-weight: normal;
 }
