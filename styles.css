@@ -140,6 +140,26 @@ legend {
   padding: 0 0.5rem;
 }
 
+/* Checkbox Styles */
+.checkbox-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.1rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-left: 0.5rem;
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.checkbox-container label {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
 /* Button Styles */
 button {
   background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
