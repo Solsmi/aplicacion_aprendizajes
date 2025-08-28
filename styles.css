@@ -190,6 +190,54 @@ button:active {
   background-color: #f1f8ff;
   border-left: 4px solid var(--primary-color);
 }
+/* Estilos para el gráfico de pomodoros */
+#grafico-pomodoros {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  background-color: white;
+  box-shadow: var(--box-shadow);
+}
+
+#grafico-pomodoros h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+#grafico-pomodoros svg {
+  width: 100%;
+  height: auto;
+}
+
+/* Plan de trabajo styles */
+#grafico-pomodoros h4 {
+  color: var(--primary-color);
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+#grafico-pomodoros > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  margin-top: 1rem;
+}
+
+#grafico-pomodoros > div:last-child > div {
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  min-width: 120px;
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* Footer Styles */
 footer {

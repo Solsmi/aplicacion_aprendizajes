@@ -40,12 +40,56 @@ function calcularPomodoros(horas) {
   const minutosDescansoTotal = minutosDescansoCorto + minutosDescansoLargo;
   const ciclosCompletos = Math.floor(pomodoros / 4);
   
+  // Generar plan de trabajo detallado
+  const planTrabajo = [];
+  let minutosRestantesPlan = minutosTotales;
+  let pomodoroContador = 1;
+  
+  while (minutosRestantesPlan > 0) {
+    // Verificar si tenemos tiempo para un pomodoro completo (25 minutos)
+    if (minutosRestantesPlan >= 25) {
+      planTrabajo.push({
+        tipo: 'pomodoro',
+        nombre: `Pomodoro ${pomodoroContador}`,
+        duracion: 25,
+        color: '#4a6fa5'
+      });
+      pomodoroContador++;
+      minutosRestantesPlan -= 25;
+      
+      // Agregar descanso (5 minutos o 30 minutos cada 4 pomodoros)
+      if ((pomodoroContador - 1) % 4 === 0) {
+        // Descanso largo de 30 minutos
+        planTrabajo.push({
+          tipo: 'descanso-largo',
+          nombre: 'Descanso Largo',
+          duracion: 30,
+          color: '#ff6b6b'
+        });
+        minutosRestantesPlan -= 30;
+      } else {
+        // Descanso corto de 5 minutos
+        planTrabajo.push({
+          tipo: 'descanso-corto',
+          nombre: 'Descanso Corto',
+          duracion: 5,
+          color: '#6b8cbc'
+        });
+        minutosRestantesPlan -= 5;
+      }
+    } else {
+      // Si no hay suficiente tiempo para un pomodoro completo, terminamos
+      break;
+    }
+  }
+  
   return {
     pomodoros: pomodoros,
     minutosDescansoCorto: minutosDescansoCorto,
     minutosDescansoLargo: minutosDescansoLargo,
     minutosDescansoTotal: minutosDescansoTotal,
-    ciclosCompletos: ciclosCompletos
+    ciclosCompletos: ciclosCompletos,
+    planTrabajo: planTrabajo
   };
 }
 
@@ -70,6 +114,162 @@ function mostrarResultadoPomodoros() {
       <li><strong>${resultado.ciclosCompletos}</strong> ciclos completos de 4 pomodoros</li>
     </ul>
   `;
+  
+  // Generar gráfico
+  generarGraficoPomodoros(resultado);
+}
+
+// Función para generar gráfico de pomodoros
+function generarGraficoPomodoros(datos) {
+  const contenedorGrafico = document.getElementById('grafico-pomodoros');
+  
+  // Limpiar contenido previo
+  contenedorGrafico.innerHTML = '';
+  
+  // Crear título para el gráfico
+  const tituloGrafico = document.createElement('h3');
+  tituloGrafico.textContent = 'Distribución del Tiempo';
+  tituloGrafico.style.textAlign = 'center';
+  contenedorGrafico.appendChild(tituloGrafico);
+  
+  // Verificar si hay plan de trabajo
+  if (!datos.planTrabajo || datos.planTrabajo.length === 0) {
+    contenedorGrafico.innerHTML += '<p>No hay plan de trabajo para mostrar.</p>';
+    return;
+  }
+  
+  // Crear contenedor para el gráfico y la leyenda
+  const contenedorFlex = document.createElement('div');
+  contenedorFlex.style.display = 'flex';
+  contenedorFlex.style.flexWrap = 'wrap';
+  contenedorFlex.style.justifyContent = 'center';
+  contenedorFlex.style.alignItems = 'center';
+  contenedorGrafico.appendChild(contenedorFlex);
+  
+  // Crear contenedor SVG
+  const svgContainer = document.createElement('div');
+  svgContainer.style.flex = '1';
+  svgContainer.style.minWidth = '300px';
+  contenedorFlex.appendChild(svgContainer);
+  
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '300');
+  svg.setAttribute('height', '300');
+  svg.setAttribute('viewBox', '0 0 300 300');
+  svgContainer.appendChild(svg);
+  
+  // Crear contenedor para la leyenda
+  const leyendaContainer = document.createElement('div');
+  leyendaContainer.style.flex = '1';
+  leyendaContainer.style.minWidth = '200px';
+  leyendaContainer.style.padding = '1rem';
+  contenedorFlex.appendChild(leyendaContainer);
+  
+  // Datos para el gráfico (plan de trabajo detallado)
+  const datosGrafico = datos.planTrabajo;
+  
+  // Calcular el valor total
+  const valorTotal = datosGrafico.reduce((sum, d) => sum + d.duracion, 0);
+  
+  // Si no hay datos, mostrar un mensaje
+  if (valorTotal === 0) {
+    contenedorGrafico.innerHTML = '<p>No hay datos para mostrar en el gráfico.</p>';
+    return;
+  }
+  
+  // Crear gráfico circular
+  const cx = 150; // Centro X
+  const cy = 150; // Centro Y
+  const r = 100;  // Radio
+  
+  let anguloAcumulado = 0;
+  
+  // Crear segmentos del gráfico circular
+  datosGrafico.forEach((dato, indice) => {
+    // Calcular ángulo para este segmento (en radianes)
+    const angulo = (dato.duracion / valorTotal) * 2 * Math.PI;
+    
+    // Calcular punto inicial del arco
+    const x1 = cx + r * Math.cos(anguloAcumulado);
+    const y1 = cy + r * Math.sin(anguloAcumulado);
+    
+    // Calcular punto final del arco
+    const x2 = cx + r * Math.cos(anguloAcumulado + angulo);
+    const y2 = cy + r * Math.sin(anguloAcumulado + angulo);
+    
+    // Determinar si el arco es mayor a 180 grados
+    const largeArcFlag = angulo > Math.PI ? 1 : 0;
+    
+    // Crear path para el segmento
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${cx},${cy} L ${x1},${y1} A ${r},${r} 0 ${largeArcFlag},1 ${x2},${y2} Z`);
+    path.setAttribute('fill', dato.color);
+    svg.appendChild(path);
+    
+    // Actualizar ángulo acumulado
+    anguloAcumulado += angulo;
+  });
+  
+  // Crear leyenda simplificada con los tipos de actividad
+  const tiposActividad = [
+    { nombre: 'Pomodoro', color: '#4a6fa5' },
+    { nombre: 'Descanso Corto', color: '#6b8cbc' },
+    { nombre: 'Descanso Largo', color: '#ff6b6b' }
+  ];
+  
+  tiposActividad.forEach(tipo => {
+    const leyendaItem = document.createElement('div');
+    leyendaItem.style.display = 'flex';
+    leyendaItem.style.alignItems = 'center';
+    leyendaItem.style.marginBottom = '0.5rem';
+    
+    const colorBox = document.createElement('div');
+    colorBox.style.width = '20px';
+    colorBox.style.height = '20px';
+    colorBox.style.backgroundColor = tipo.color;
+    colorBox.style.marginRight = '0.5rem';
+    colorBox.style.borderRadius = '3px';
+    
+    const textoLeyenda = document.createElement('span');
+    textoLeyenda.textContent = tipo.nombre;
+    
+    leyendaItem.appendChild(colorBox);
+    leyendaItem.appendChild(textoLeyenda);
+    leyendaContainer.appendChild(leyendaItem);
+  });
+  
+  // Crear sección separada para el plan de trabajo detallado
+  const tituloPlan = document.createElement('h4');
+  tituloPlan.textContent = 'Plan de Trabajo Detallado';
+  tituloPlan.style.marginTop = '2rem';
+  contenedorGrafico.appendChild(tituloPlan);
+  
+  const planContainer = document.createElement('div');
+  planContainer.style.display = 'flex';
+  planContainer.style.flexWrap = 'wrap';
+  planContainer.style.gap = '0.5rem';
+  planContainer.style.justifyContent = 'center';
+  planContainer.style.marginTop = '1rem';
+  contenedorGrafico.appendChild(planContainer);
+  
+  // Mostrar los primeros 30 elementos del plan de trabajo
+  const elementosMostrar = Math.min(datos.planTrabajo.length, 30);
+  for (let i = 0; i < elementosMostrar; i++) {
+    const actividad = datos.planTrabajo[i];
+    const actividadElement = document.createElement('div');
+    actividadElement.textContent = actividad.nombre;
+    actividadElement.style.backgroundColor = actividad.color;
+    planContainer.appendChild(actividadElement);
+  }
+  
+  // Si hay más elementos, mostrar un mensaje
+  if (datos.planTrabajo.length > 30) {
+    const mensajeExtra = document.createElement('p');
+    mensajeExtra.textContent = `... y ${datos.planTrabajo.length - 30} más`;
+    mensajeExtra.style.fontStyle = 'italic';
+    mensajeExtra.style.textAlign = 'left';
+    contenedorGrafico.appendChild(mensajeExtra);
+  }
 }
 
 // Función para evaluar hábitos
