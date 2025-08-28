@@ -248,7 +248,7 @@ function generarGraficoPomodoros(datos) {
   planContainer.style.display = 'flex';
   planContainer.style.flexWrap = 'wrap';
   planContainer.style.gap = '0.5rem';
-  planContainer.style.justifyContent = 'center';
+  planContainer.style.justifyContent = 'flex-start';
   planContainer.style.marginTop = '1rem';
   contenedorGrafico.appendChild(planContainer);
   
